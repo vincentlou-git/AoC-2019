@@ -64,7 +64,7 @@ def intcode(nums):
             print("Pls input")
             nums[nums[ip+1]] = int(input())
         elif (opcode == 4): # output / print out parameter (n)
-            print(nums[nums[ip+1]])
+            print(a)
         elif (opcode == 5): # JIT(a > 0, ip = b)
             if (a > 0):
                 ip = b
