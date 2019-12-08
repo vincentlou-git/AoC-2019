@@ -59,6 +59,12 @@ def numOrbits(child, checkedParents):
     nameOrbitsDict[child] = count
     return count
 
+def parentOf(child):
+    for r in relationships:
+        if (r[1] == child):
+            return r[0]
+    return "TERMINATION"
+
 def minOrbitTransfers(orbit1, orbit2):
     """
     Logic draft:
@@ -67,11 +73,34 @@ def minOrbitTransfers(orbit1, orbit2):
         Find parent chain for orbit2, store in stack2
         end root (parent) / top of stack should be the same
         pop stack1 until the popped element is no longer in stack2
+        ^ Only returns first branch. Need to find last branch
+        ^ Start from orbit1, first match in stack2 will be min branch
         then the parent of the popped element is the branching planet
         pop stack2 until the popped element == branching planet
         then join the two stacks, remember to remove orbit1 and orbit2
     """
-    return
+    stack1 = [] ; stack2 = []
+    name = orbit1
+    while (parentOf(name) != "TERMINATION"):
+        name = parentOf(name)
+        stack1.append(name)
+    name = orbit2
+    while (parentOf(name) != "TERMINATION"):
+        name = parentOf(name)
+        stack2.append(name)
+        
+    branch = parentOf(orbit1)
+    while (branch not in stack2):
+        branch = parentOf(branch)
+    while (stack1.pop() != branch):
+        stack1.pop()
+    while (stack2.pop() != branch):
+        stack2.pop()
+        
+    # join stack1 (parent of orbit1 to including branch) 
+    #    + stack2 (parent of orbit1 to including branch)
+    #    - 1 (included branch twice) < ? Why do we not need this
+    return len(stack1) + len(stack2)
 
 def splitOrbits(filename):
     content = [x.strip().split(")") for x in open(filename).readlines()]
@@ -90,7 +119,7 @@ relationships = splitOrbits("input.txt")
 nameSet = allNames(relationships)
 print(nameSet)
 # Print this for part 1
-print(sum(numOrbits(x, set()) for x in nameSet))
+#print(sum(numOrbits(x, set()) for x in nameSet))
 
 # Print this for part 2
-#print(minOrbitTransfers("YOU", "SAN"))
+print(minOrbitTransfers("YOU", "SAN"))
