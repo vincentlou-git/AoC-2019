@@ -5,6 +5,10 @@ Created on Sat Dec  7 23:49:01 2019
 @author: DoraMemo
 """
 
+import sys
+sys.path.append('..')
+from commonfunctions import *
+
 # direct orbits
 # indirect orbits
 
@@ -26,6 +30,7 @@ Optimizations:
    otherwise, compute
 """
 
-with open("input.txt") as f:
-    content = [int(x.strip()) for x in f.readlines()]
+def orbits(name, m):
+    return 1
 
+content = parseFile("input.txt")
