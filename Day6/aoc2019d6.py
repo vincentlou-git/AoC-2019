@@ -38,6 +38,8 @@ NOTE: I guess that lookup table idea wouldn't work because you never know
       when is the parent name terminated
 """
 
+nameOrbitsDict = {}
+
 def numOrbits(child, checkedParents, relationships):
     """
     INPUT:
@@ -48,19 +50,22 @@ def numOrbits(child, checkedParents, relationships):
     
     i = 0
     count = 0
-    print(checkedParents)
+#    print(checkedParents)
     while (i != len(relationships)):
         r = relationships[i]
-        print("Checking", r, "in child =", child)
+#        print("Checking", r, "in child =", child)
         if (r[1] == child and r[0] not in checkedParents):
-            print("Found a parent in", r)
+#            print("Found a parent in", r)
 #            del relationships[i]
             checkedParents.add(r[0])
-            count += 1 + numOrbits(r[0], checkedParents, relationships)
-            print("Count is now", count, "for", child)
+            parentCount = numOrbits(r[0], checkedParents, relationships) \
+                          if r[0] not in nameOrbitsDict.keys() else nameOrbitsDict[r[0]]
+            count += 1 + parentCount
+#            print("Count is now", count, "for", child)
             return count # 1 (direct) + parent orbits
         i += 1
-    print(child, "has", count, "orbits")
+#    print(child, "has", count, "orbits")
+    nameOrbitsDict[child] = count
     return count
 
 def splitOrbits(filename):
@@ -76,7 +81,7 @@ def allNames(relationships):
             nameSet.append(r[1])
     return nameSet
 
-rels = splitOrbits("input_test.txt")
+rels = splitOrbits("input.txt")
 nameSet = allNames(rels)
 print(nameSet)
 print(sum(numOrbits(x, set(), rels) for x in nameSet))
