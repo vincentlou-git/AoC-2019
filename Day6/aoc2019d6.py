@@ -26,8 +26,7 @@ Feed in a [name] in function, return:
    enter [name], feed the "parent" of this [name] in function, +1 each time.
    if "parent" doesn't have a super-parent, terminate (base case)
 NOTE: Recursion actually wouldn't work well...
-      1. Overhead for copying truncated list
-      2. 
+      1. Overhead of suspensions for large data set
    
 Optimizations:
 1. Store the number of orbits of a [name] once computed.
@@ -40,14 +39,7 @@ NOTE: I guess that lookup table idea wouldn't work because you never know
 
 nameOrbitsDict = {}
 
-def numOrbits(child, checkedParents, relationships):
-    """
-    INPUT:
-        name    child name
-        relIndex   index of relationship we're checking
-        parents, children needed
-    """
-    
+def numOrbits(child, checkedParents):    
     i = 0
     count = 0
 #    print(checkedParents)
@@ -56,10 +48,9 @@ def numOrbits(child, checkedParents, relationships):
 #        print("Checking", r, "in child =", child)
         if (r[1] == child and r[0] not in checkedParents):
 #            print("Found a parent in", r)
-#            del relationships[i]
             checkedParents.add(r[0])
-            parentCount = numOrbits(r[0], checkedParents, relationships) \
-                          if r[0] not in nameOrbitsDict.keys() else nameOrbitsDict[r[0]]
+            parentCount = nameOrbitsDict[r[0]] if r[0] in nameOrbitsDict.keys() \
+                          else numOrbits(r[0], checkedParents)
             count += 1 + parentCount
 #            print("Count is now", count, "for", child)
             return count # 1 (direct) + parent orbits
@@ -67,6 +58,9 @@ def numOrbits(child, checkedParents, relationships):
 #    print(child, "has", count, "orbits")
     nameOrbitsDict[child] = count
     return count
+
+def minOrbitTransfers(orbit1, orbit2):
+    return
 
 def splitOrbits(filename):
     content = [x.strip().split(")") for x in open(filename).readlines()]
@@ -81,7 +75,11 @@ def allNames(relationships):
             nameSet.append(r[1])
     return nameSet
 
-rels = splitOrbits("input.txt")
-nameSet = allNames(rels)
+relationships = splitOrbits("input.txt")
+nameSet = allNames(relationships)
 print(nameSet)
-print(sum(numOrbits(x, set(), rels) for x in nameSet))
+# Print this for part 1
+print(sum(numOrbits(x, set()) for x in nameSet))
+
+# Print this for part 2
+#print(minOrbitTransfers("YOU", "SAN"))
