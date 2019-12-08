@@ -60,6 +60,17 @@ def numOrbits(child, checkedParents):
     return count
 
 def minOrbitTransfers(orbit1, orbit2):
+    """
+    Logic draft:
+        Backtracking
+        Find parent chain for orbit1, store in stack1
+        Find parent chain for orbit2, store in stack2
+        end root (parent) / top of stack should be the same
+        pop stack1 until the popped element is no longer in stack2
+        then the parent of the popped element is the branching planet
+        pop stack2 until the popped element == branching planet
+        then join the two stacks, remember to remove orbit1 and orbit2
+    """
     return
 
 def splitOrbits(filename):
