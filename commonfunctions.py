@@ -10,3 +10,12 @@ this file when it does
 def parseFile(filename):
     content = [x.strip() for x in open(filename).readlines()]
     return content
+
+def parseIntcode(filename):
+    f = open(filename)
+    line = f.readline()
+    f.close()
+    
+    program = line.split(",")
+    program = [int(x) for x in program]
+    return program
